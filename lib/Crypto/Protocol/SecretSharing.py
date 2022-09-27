@@ -36,6 +36,8 @@ from Crypto.Util import number
 from Crypto.Util.number import long_to_bytes, bytes_to_long
 from Crypto.Random import get_random_bytes as rng
 
+from random import randbytes, seed
+
 
 def _mult_gf2(f1, f2):
     """Multiply two polynomials in GF(2)"""
@@ -166,7 +168,7 @@ class Shamir(object):
     """
 
     @staticmethod
-    def split(k, n, secret, ssss=False):
+    def split(k, n, secret, seed, ssss=False):
         """Split a secret into ``n`` shares.
 
         The secret can be reconstructed later using just ``k`` shares
@@ -202,7 +204,13 @@ class Shamir(object):
         # c_0 is the encoded secret
         #
 
-        coeffs = [_Element(rng(16)) for i in range(k - 1)]
+
+        # WARNING: THIS MODIFICATION IS NOT CRYPTOGRAPHICALLY SECURE
+        # Generating random bytes using Python's random, and seeding it with the seed parameter
+        seed(seed)
+        coeffs = [_Element(randbytes(16)) for i in range(k - 1)]
+        # coeffs = [_Element(rng(16)) for i in range(k - 1)]
+
         coeffs.append(_Element(secret))
 
         # Each share is y_i = p(x_i) where x_i is the public index
