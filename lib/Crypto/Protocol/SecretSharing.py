@@ -36,7 +36,7 @@ from Crypto.Util import number
 from Crypto.Util.number import long_to_bytes, bytes_to_long
 from Crypto.Random import get_random_bytes as rng
 
-from random import randbytes, seed
+import random
 
 
 def _mult_gf2(f1, f2):
@@ -207,8 +207,8 @@ class Shamir(object):
 
         # WARNING: THIS MODIFICATION IS NOT CRYPTOGRAPHICALLY SECURE
         # Generating random bytes using Python's random, and seeding it with the seed parameter
-        seed(seed)
-        coeffs = [_Element(randbytes(16)) for i in range(k - 1)]
+        random.seed(seed)
+        coeffs = [_Element(random.randbytes(16)) for i in range(k - 1)]
         # coeffs = [_Element(rng(16)) for i in range(k - 1)]
 
         coeffs.append(_Element(secret))
